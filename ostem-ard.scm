@@ -18,16 +18,16 @@
 	((equal? l `m) `miriamele) ;; rainha de ostem ard
 	((equal? l `n) `nabban) ;; regiao ao sul de ostem ard
 	((equal? l `o) `ostem-ard) ;; nome do continente
-	;; p
+	((equal? l `p) `porto) ;; cavaleiro que lutou na guerra contra os norns
 	;; q
 	;; r
 	((equal? l `s) `seoman) ;; rei simon
 	((equal? l `t) `tiamak) ;; estudioso do wran
-	;; u
-	;; v
+	((equal? l `u) `uttuku) ;; rainha dos norns
+	((equal? l `v) (`viyeki)) ;; alto mestre dos construtores denakkiga
 	((equal? l `w) `wran) ;; regi'ao pantanosa ao sul de ostem ard
 	;; x
-	;; y
+	((equal? l `y) `yicanuq)) ;; lingua dos trolls
 	;; z
 	(else "")))
 
