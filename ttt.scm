@@ -1,3 +1,6 @@
+;; é um exemplo do simply scheme
+;; o mais interessante é a idéia de transformar a representacao inicial do
+;; tabuleiro em "triples", que sao as unidades relevantes
 (define (ttt position me)
   (let ((triples (find-triples position)))
     (cond ((i-can-win? triples me))
@@ -102,3 +105,18 @@
 (define (first-choice possibilities preferences)
   (first (keep (lambda (square) (member? square possibilities))
 	       preferences)))
+
+(define (already-won? triples me)
+  (= (occurences (word me me me) triples) 1))
+
+(define (tie-game? position) ;; to be called after already-won?
+  (not (member? `_ position)))
+
+(define (will-tie? triples) ;; check if the game is fated to tie
+  (and (no-hope? triples `o)
+       (no-hope? triples `x)))
+
+(define (no-hope? triples me) ;; there is no hope if the opponent is in every triple!
+  (empty? (keep (lambda (triple)
+		  (= (occurences (opponent me) triple) 0))
+		triples)))
