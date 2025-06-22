@@ -19,7 +19,7 @@
 	((equal? l `n) `nabban) ;; regiao ao sul de ostem ard
 	((equal? l `o) `ostem-ard) ;; nome do continente
 	((equal? l `p) `porto) ;; cavaleiro que lutou na guerra contra os norns
-	;; q
+	((equal? l `q) `qantaca) ;; um lobo muito honrado
 	;; r
 	((equal? l `s) `seoman) ;; rei simon
 	((equal? l `t) `tiamak) ;; estudioso do wran

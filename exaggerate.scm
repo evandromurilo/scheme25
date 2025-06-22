@@ -14,3 +14,10 @@
 	((equal? wr `legal) `fenomenal)
 	(else wr)))
 	  
+
+;; this is the same, but recursive
+
+(define (exagerar st)
+  (if (empty? st)
+      st
+      (sentence (exagerar-palavra (first st)) (exagerar (bf st)))))

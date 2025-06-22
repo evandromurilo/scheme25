@@ -24,3 +24,24 @@
 (define (gpa st)
   (/ (accumulate + (every point-grade st)) (count st)))
       
+
+;; the same, but recursive
+(define (sum-points st)
+  (if (empty? st)
+      0
+      (+ (point-grade (first st)) (sum-points (bf st)))))
+
+(define (gpa-rec st) ;; fica melhor na versão com accumulate e every, porque média não traduz bem para recursão
+  (/ (sum-points st) (count st)))
+
+
+;; the same, but with helper for recursion
+(define (gpa-rec2 st)
+  (gpa-helper st (count st)))
+
+(define (gpa-helper st tot)
+  (if (empty? st)
+      0
+      (+ (/ (point-grade (first st)) tot) (gpa-helper (bf st) tot))))
+      
+      

@@ -22,3 +22,13 @@
   (if (= 1 n)
       (se 1 thing)
       (se n (plural thing))))
+
+;; esse faz parecido, mas sem fracionar
+(define (desc-time seconds)
+  (cond ((> seconds (* 60 60))
+	 (sentence (thismany (quotient seconds (* 60 60)) 'hour)
+		   (desc-time (- seconds (* 60 60 (quotient seconds (* 60 60)))))))
+	((> seconds 60)
+	 (sentence (thismany (quotient seconds 60) 'minute)
+		   (desc-time (- seconds (* 60 (quotient seconds 60))))))
+	(else (thismany seconds 'second)))) ;; hours is enough

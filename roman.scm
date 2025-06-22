@@ -18,7 +18,7 @@
       '()
       (se (single-roman-to-num (first r)) (many-roman-to-num (bf r)))))
 
-(define (roman-to-num r)
+(define (arabic r)
   (roman-sum (many-roman-to-num r) (single-roman-to-num (last r))))
 
 (define (roman-sum ds prev)
@@ -26,3 +26,13 @@
 	((< (last ds) prev) (- (roman-sum (bl ds) (last ds)) (last ds)))
 	(else (+ (last ds) (roman-sum (bl ds) (last ds))))))
 
+;; esse faz o inverso, converte de arábico para romano, sem usar ainda a forma subtrativa (quer dizer que 4 vira iiii em vez de iv)
+(define (roman n)
+  (cond ((>= n 1000) (word `m (roman (- n 1000))))
+	((>= n 500) (word `d (roman (- n 500))))
+	((>= n 100) (word `c (roman (- n 100))))
+	((>= n 50) (word `l (roman (- n 50))))
+	((>= n 10) (word `x (roman (- n 10))))
+	((>= n 5) (word `v (roman (- n 5))))
+	((>= n 1) (word `i (roman (- n 1))))
+	(else (word)))) ;; não tem zero em romanos
