@@ -27,3 +27,19 @@
       (sentence
        (crescendo (first wr) (bf wr))
        (substrings (bf wr)))))
+
+(define (starts-with? wr a)
+  (cond ((empty? a)
+	 #t)
+	((empty? wr)
+	 #f)
+	((equal? (first wr) (first a))
+	 (starts-with? (bf wr) (bf a)))
+	(else
+	 #f)))
+
+(define (substring? a wr)
+  (if (empty? wr)
+      #f
+      (or (starts-with? wr a)
+	  (substring? a (bf wr)))))
