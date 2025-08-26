@@ -14,16 +14,16 @@
 	   #f)))
   (helper (flatten sent)))
 
-(define (interpolate l wr)
+(define (crescendo l wr)
   (if (empty? wr)
       (sentence l)
       (sentence l
-		(interpolate (word l (first wr)) (bf wr)))))
+		(crescendo (word l (first wr)) (bf wr)))))
 
 ;; returns all the substrings of wr
 (define (substrings wr)
   (if (empty? wr)
       (sentence)
       (sentence
-       (interpolate (first wr) (bf wr))
+       (crescendo (first wr) (bf wr))
        (substrings (bf wr)))))
