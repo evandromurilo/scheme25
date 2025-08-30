@@ -1,0 +1,35 @@
+(define (three-of-a-kind? hand)
+  (member? 'three (count-by-rank hand)))
+
+(define (rank-of card)
+  (first (bf card)))
+
+(define (spell-num num)
+  (cond ((= num 1) 'one)
+	((= num 2) 'two)
+	((= num 3) 'three)
+	((= num 4) 'four)
+	((= num 5) 'five)
+	(else 'out-of-bounds)))
+
+(define (count-by-rank hand)
+  (define (count-by rank hand)
+    (cond ((empty? hand)
+	   0)
+	  ((equal? rank (rank-of (first hand)))
+	   (+ 1 (count-by rank (bf hand))))
+	  (else
+	   (count-by rank (bf hand)))))
+  (define (remove-rank rank hand)
+    (cond ((empty? hand)
+	   (sentence))
+	  ((equal? (rank-of (first hand)) rank)
+	   (remove-rank rank (bf hand)))
+	  (else
+	   (sentence (first hand) (remove-rank rank (bf hand))))))
+  (if (empty? hand)
+      (sentence)
+      (sentence (spell-num (count-by (rank-of (first hand)) hand))
+		(rank-of (first hand))
+		(count-by-rank (remove-rank (rank-of (first hand)) (bf hand))))))
+  
