@@ -1,15 +1,3 @@
-;; [x] royal flush
-;; [x] straight flush
-;; [x] four of a kind
-;; [x] full house
-;; [x] flush
-;; [x] straight
-;; [x] three of a kind
-;; [ ] two pair
-;; [x] pair
-;; [x] nothing
-
-
 (define (poker-value hand)
   (let* ((hand (sort-hand hand))
 	 (c-rank (count-by-rank hand)))
@@ -27,6 +15,8 @@
 	   '(straight))
 	  ((three-of-a-kind? c-rank)
 	   '(three of a kind))
+	  ((two-pair? c-rank)
+	   '(two pair))
 	  ((pair? c-rank)
 	   '(pair))
 	  (else '(nein)))))
@@ -51,7 +41,16 @@
       (let ((f (earliest-card hand)))
 	(sentence f
 		  (sort-hand (remove-card f hand))))))
-	
+
+(define (member-count el seq)
+  (cond ((empty? seq) 0)
+	((equal? el (first seq))
+	 (+ 1 (member-count el (bf seq))))
+	(else (member-count el (bf seq)))))
+
+(define (two-pair? c-rank)
+  (equal? (member-count 'two c-rank) 2))
+
 (define (pair? c-rank)
   (member? 'two c-rank))
 
