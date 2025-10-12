@@ -1,7 +1,9 @@
 (define (poker-value hand)
   (let* ((hand (sort-hand hand))
 	 (c-rank (count-by-rank hand)))
-    (cond ((straight? hand)
+    (cond ((royal-flush? hand)
+	   '(royal flush))
+	   ((straight? hand)
 	   '(straight))
 	  ((four-of-a-kind? c-rank)
 	   '(four of a kind))
@@ -41,6 +43,18 @@
 (define (four-of-a-kind? c-rank)
   (member? 'four c-rank))
 
+(define (royal-flush? hand)
+  (and (single-suit? hand)
+       (equal? (rank-of (first hand)) 'a)
+       (equal? (rank-of (first (bf hand))) 10)
+       (in-sequence? (bf hand))))
+
+(define (single-suit? hand)
+  (or (< (count hand) 2)
+      (and (equal? (suit-of (first hand))
+		   (suit-of (first (bf hand))))
+	   (single-suit? (bf hand)))))
+
 (define (straight? hand)
   (if (equal? (rank-of (first hand)) 'a)
       (or (in-sequence? hand)
@@ -55,6 +69,9 @@
 
 (define (rank-of card)
   (bf card))
+
+(define (suit-of card)
+  (first card))
 
 (define (follows? a-card b-card)
   (or (and (equal? (rank-of a-card) 'k)
