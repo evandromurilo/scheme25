@@ -1,3 +1,15 @@
+;; [x] royal flush
+;; [ ] straight flush
+;; [x] four of a kind
+;; [ ] full house
+;; [ ] flush
+;; [x] straight
+;; [x] three of a kind
+;; [ ] two pair
+;; [x] pair
+;; [x] nothing
+
+
 (define (poker-value hand)
   (let* ((hand (sort-hand hand))
 	 (c-rank (count-by-rank hand)))
