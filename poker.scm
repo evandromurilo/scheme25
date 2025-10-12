@@ -1,7 +1,7 @@
 ;; [x] royal flush
 ;; [x] straight flush
 ;; [x] four of a kind
-;; [ ] full house
+;; [x] full house
 ;; [ ] flush
 ;; [x] straight
 ;; [x] three of a kind
@@ -19,6 +19,8 @@
 	   '(straight flush))
 	  ((four-of-a-kind? c-rank)
 	   '(four of a kind))
+	  ((full-house? c-rank)
+	   '(full house))
 	  ((straight? hand)
 	   '(straight))
 	  ((three-of-a-kind? c-rank)
@@ -65,6 +67,10 @@
 
 (define (straight-flush? hand)
   (and (single-suit? hand) (in-sequence? hand)))
+
+(define (full-house? c-rank)
+  (and (member? 'three c-rank)
+       (member? 'two c-rank)))
 
 (define (single-suit? hand)
   (or (< (count hand) 2)
