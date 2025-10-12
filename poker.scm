@@ -1,5 +1,5 @@
 ;; [x] royal flush
-;; [ ] straight flush
+;; [x] straight flush
 ;; [x] four of a kind
 ;; [ ] full house
 ;; [ ] flush
@@ -15,6 +15,8 @@
 	 (c-rank (count-by-rank hand)))
     (cond ((royal-flush? hand)
 	   '(royal flush))
+	  (straight-flush? hand)
+	  '(straight flush))
 	   ((straight? hand)
 	   '(straight))
 	  ((four-of-a-kind? c-rank)
@@ -60,6 +62,9 @@
        (equal? (rank-of (first hand)) 'a)
        (equal? (rank-of (first (bf hand))) 10)
        (in-sequence? (bf hand))))
+
+(define (straight-flush? hand)
+  (and (single-suit? hand) (in-sequence? hand)))
 
 (define (single-suit? hand)
   (or (< (count hand) 2)
