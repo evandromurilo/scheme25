@@ -2,7 +2,7 @@
 ;; [x] straight flush
 ;; [x] four of a kind
 ;; [x] full house
-;; [ ] flush
+;; [x] flush
 ;; [x] straight
 ;; [x] three of a kind
 ;; [ ] two pair
@@ -21,6 +21,8 @@
 	   '(four of a kind))
 	  ((full-house? c-rank)
 	   '(full house))
+	  ((flush? hand)
+	   '(flush))
 	  ((straight? hand)
 	   '(straight))
 	  ((three-of-a-kind? c-rank)
@@ -71,6 +73,9 @@
 (define (full-house? c-rank)
   (and (member? 'three c-rank)
        (member? 'two c-rank)))
+
+(define (flush? hand)
+  (single-suit? hand))
 
 (define (single-suit? hand)
   (or (< (count hand) 2)
