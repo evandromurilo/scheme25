@@ -20,11 +20,11 @@
 (defn match? [pattern sent]
   (cond
     (empty? pattern) (empty? sent)
-    (empty? sent) false
-    (= (first pattern) '!) (match? (bf pattern) (bf sent))
     (= (first pattern) '?) (if (empty? sent)
                              (match? (bf pattern) '()) ;; empty sentence, will match if empty patterna after ?
                              (or (match? (bf pattern) (bf sent)) ;; otherwise will match the first word for ?, or just skip the ?
                                  (match? (bf pattern) sent)))
+    (empty? sent) false
+    (= (first pattern) '!) (match? (bf pattern) (bf sent))
     (= (first pattern) (first sent)) (match? (bf pattern) (bf sent))
     :else false))
