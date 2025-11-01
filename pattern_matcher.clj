@@ -7,9 +7,21 @@
 ;; * Any number of words
 
 ;; but-first, like in simply.scm
-
 (defn bf [sent] (rest sent))
 
+(def atom? symbol?)
+
+;; sent like in simply.scm
+(defn sent-step [a b]
+  (cond
+    (and (atom? a) (atom? b)) (list a b)
+    (and (atom? a) (seq? b)) (cons a b)
+    (and (seq? a) (atom? b)) (list-concat a (list b))
+    (and (seq? a) (seq? b)) (list-concat a b)))
+
+(defn sentence [& args]
+  (reduce sent-step args))
+                  
 (defn sent-equal? [sent1 sent2]
   (cond 
     (empty? sent1) (empty? sent2)
@@ -20,6 +32,9 @@
 (defn match? [pattern sent]
   (cond
     (empty? pattern) (empty? sent)
+    (= (first pattern) '&) (if (empty? sent)
+                             false
+                             (match? (sentence '* (bf pattern)) (bf sent)))
     (= (first pattern) '*) (if (empty? sent)
                             (match? (bf pattern) '())
                             (or (match? pattern (bf sent))
