@@ -20,6 +20,10 @@
 (defn match? [pattern sent]
   (cond
     (empty? pattern) (empty? sent)
+    (= (first pattern) '*) (if (empty? sent)
+                            (match? (bf pattern) '())
+                            (or (match? pattern (bf sent))
+                                (match? (bf pattern) sent)))
     (= (first pattern) '?) (if (empty? sent)
                              (match? (bf pattern) '()) ;; empty sentence, will match if empty patterna after ?
                              (or (match? (bf pattern) (bf sent)) ;; otherwise will match the first word for ?, or just skip the ?
