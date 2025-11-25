@@ -14,14 +14,6 @@
   (make-node (datum node) (append (children node) (list child))))
 
 (define (parse exp)
-  (cond ((null? exp) '())
-	((number? (car exp))
-	 (if (null? (cdr exp))
-	     (make-node (car exp) '())
-	     (make-node (cadr exp) (list (make-node (car exp) '()) (parse (cddr exp))))))
-	(else exp)))
-
-(define (parse exp)
   (define (precedes? a b)
     (and (or (equal? a '*)
 	     (equal? a '/))
