@@ -21,8 +21,6 @@
 	     (equal? b '-))))
   (define (sub prev exp)
     (cond ((null? exp) prev)
-	  ((number? exp)
-	   (add-child prev (make-leaf exp)))
 	  ((null? (cdr exp))
 	   (add-child prev (parse (car exp))))
 	  (else (let ((op (cadr exp)))
