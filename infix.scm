@@ -55,23 +55,31 @@
       (equal? a '-)
       (equal? a '/)))
 
-(define (parse exp rators rands)
-  (if (null? exp)
-      (if (null? rators)
-	  (car rands)
-	  (parse '() (cdr rators) (cons (make-node (car rators) (list (car rands) (cadr rands))) (cddr rands))))
-      (if (operator? (car exp))
-	  (if (and (not (null? rators)) (not (precedes? (car exp) (car rators))))
-	      (parse (cdr exp)
-		     (cons (car exp) (cdr rators))
-		     (cons (make-node (car rators) (list (car rands) (cadr rands)))
-			   (cddr rands)))
-	      (parse (cdr exp)
-		     (cons (car exp) rators)
-		     rands))
-	  (if (number? (car exp))
-	      (parse (cdr exp) rators (cons (make-leaf (car exp)) rands))
-	      (parse (cdr exp) rators (cons (parse (car exp) '() '()) rands))))))
+(define (parse exp)
+  (parse-helper exp '() '()))
+
+(define (parse-helper exp rators rands)
+  (define (pop-operator)
+    (make-node (car rators) (list (cadr rands) (car rands))))
+
+  (define (pop-operator-and-recurse)
+    (parse-helper
+     exp
+     (cdr rators)
+     (cons (pop-operator) (cddr rands))))
+  
+  (cond ((null? exp)
+	 (if (null? rators)
+	     (car rands)
+	     (pop-operator-and-recurse)))
+	((operator? (car exp))
+	 (if (and (not (null? rators)) (not (precedes? (car exp) (car rators))))
+	     (pop-operator-and-recurse)
+	     (parse-helper (cdr exp) (cons (car exp) rators) rands)))
+	((number? (car exp))
+	 (parse-helper (cdr exp) rators (cons (make-leaf (car exp)) rands)))
+	(else (parse-helper (cdr exp) rators (cons (parse (car exp)) rands)))))
+	
 
 (define (calc exp)
   (if (number? (datum exp))
