@@ -69,7 +69,9 @@
 	      (parse (cdr exp)
 		     (cons (car exp) rators)
 		     rands))
-	  (parse (cdr exp) rators (cons (make-leaf (car exp)) rands)))))
+	  (if (number? (car exp))
+	      (parse (cdr exp) rators (cons (make-leaf (car exp)) rands))
+	      (parse (cdr exp) rators (cons (parse (car exp) '() '()) rands))))))
 
 (define (calc exp)
   (if (number? (datum exp))
