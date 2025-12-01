@@ -98,4 +98,20 @@
       #f
       (or (locate place (car forest))
 	  (locate-in-forest place (cdr forest)))))
+
+(define (max a b)
+  (if (> b a)
+      b
+      a))
+
+(define (forest-depth forest)
+  (if (null? forest)
+      0
+      (max (depth (car forest))
+	   (forest-depth (cdr forest)))))
+
+(define (depth tree)
+  (if (leaf? tree)
+      1
+      (+ 1 (forest-depth (children tree)))))
       
