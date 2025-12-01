@@ -4,6 +4,12 @@
 (define (make-leaf datum)
   (cons datum '()))
 
+(define (leaf? node)
+  (empty? (children node)))
+
+(define (branch? node)
+  (not (leaf? node)))
+
 (define (datum node)
   (car node))
 
@@ -36,6 +42,40 @@
 	 (sub (make-node (cadr exp)
 			 (list (parse (car exp))))
 	      (cddr exp)))))
+
+(define (precedes? a b)
+    (and (or (equal? a '*)
+	     (equal? a '/))
+	 (or (equal? b '+)
+	     (equal? b '-))))
+
+(define (operator? a)
+  (or (equal? a '*)
+      (equal? a '+)
+      (equal? a '-)
+      (equal? a '/)))
+
+(define (parse exp rators rands)
+  (if (null? exp)
+      (if (null? rators)
+	  (car rands)
+	  (parse '() (cdr rators) (cons (make-node (car rators) (list (car rands) (cadr rands))) (cddr rands))))
+      (if (operator? (car exp))
+	  (if (and (not (null? rators)) (not (precedes? (car exp) (car rators))))
+	      (parse (cdr exp)
+		     (cons (car exp) (cdr rators))
+		     (cons (make-node (car rators) (list (car rands) (cadr rands)))
+			   (cddr rands)))
+	      (parse (cdr exp)
+		     (cons (car exp) rators)
+		     rands))
+	  (parse (cdr exp) rators (cons (make-leaf (car exp)) rands)))))
+
+(define (calc exp)
+  (if (number? (datum exp))
+      (datum exp)
+      (apply (primitive-eval (datum exp))
+	 (map calc (children exp)))))
   
 (parse '(4 + 3))	 
 (parse '(4 + 3 * 7 - 5 / (3 + 4) + 6))
