@@ -57,15 +57,15 @@
 	(else (parse-helper (cdr exp) rators (cons (parse (car exp)) rands)))))
 	
 (define (parse-scheme exp)
-  (define (parse-scheme-operand exp)
-    (if (number? exp)
-	(make-leaf exp)
-	(parse-scheme exp)))
+  (define (parse-scheme-operands forest)
+    (if (null? forest)
+	'()
+	(cons (if (list? (car forest))
+		  (parse-scheme (car forest))
+		  (make-leaf (car forest)))
+	      (parse-scheme-operands (cdr forest)))))
   (make-node (car exp)
-	     (list
-	      (parse-scheme-operand (cadr exp))
-	      (parse-scheme-operand (caddr exp)))))
-	     
+	     (parse-scheme-operands (cdr exp))))
 
 (define (calc exp)
   (if (number? (datum exp))
