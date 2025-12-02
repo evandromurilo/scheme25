@@ -115,3 +115,16 @@
       1
       (+ 1 (forest-depth (children tree)))))
       
+(define (prune tree)
+  (if (leaf? tree)
+      #f
+      (make-node (datum tree)
+		 (prune-forest (children tree)))))
+
+(define (prune-forest forest)
+  (if (null? forest)
+      '()
+      (if (null? (children (car forest)))
+	  (prune-forest (cdr forest))
+	  (cons (prune (car forest))
+		(prune-forest (cdr forest))))))
