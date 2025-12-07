@@ -23,3 +23,13 @@
 
 (define (true-for-all-pairs? op lst)
   (not (true-for-any-pair? (lambda (a b) (not (op a b))) lst)))
+
+(define (bubble-sort lst op)
+  (if (or (null? lst) (null? (cdr lst)))
+      lst
+      (let ((attempt (if (op (car lst) (cadr lst))
+			 (cons (car lst) (bubble-sort (cdr lst) op))
+			 (cons (cadr lst) (bubble-sort (cons (car lst) (cddr lst)) op)))))
+	(if (equal? attempt lst)
+	    attempt
+	    (bubble-sort attempt op)))))
