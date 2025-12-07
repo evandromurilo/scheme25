@@ -33,3 +33,12 @@
 	(if (equal? attempt lst)
 	    attempt
 	    (bubble-sort attempt op)))))
+
+(define (deep-reduce op lst)
+  (if (null? lst)
+      (op)
+      (op (if (list? (car lst))
+	      (deep-reduce op (car lst))
+	      (car lst))
+	  (deep-reduce op (cdr lst)))))
+		     

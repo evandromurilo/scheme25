@@ -128,3 +128,22 @@
 	  (prune-forest (cdr forest))
 	  (cons (prune (car forest))
 		(prune-forest (cdr forest))))))
+
+(define (forest-map op forest)
+  (if (null? forest)
+      '()
+      (cons (tree-map op (car forest)) (forest-map op (cdr forest)))))
+
+(define (tree-map op tree)
+  (make-node (op (datum tree))
+	     (forest-map op (children tree))))
+
+(define (forest-reduce op forest)
+  (if (empty? forest)
+      (op)
+      (op (tree-reduce op (car forest)) (forest-reduce op (cdr forest)))))
+      
+(define (tree-reduce op tree)
+  (if (empty? (children tree))
+      (op (datum tree))
+      (op (datum tree) (forest-reduce op (children tree)))))
