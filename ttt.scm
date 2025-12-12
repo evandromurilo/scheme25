@@ -106,8 +106,9 @@
   (first (keep (lambda (square) (member? square possibilities))
 	       preferences)))
 
-(define (already-won? triples me)
-  (= (occurences (word me me me) triples) 1))
+(define (already-won? position me)
+  (let ((triples (find-triples position)))
+    (= (occurences (word me me me) triples) 1)))
 
 (define (tie-game? position) ;; to be called after already-won?
   (not (member? `_ position)))
@@ -121,9 +122,19 @@
 		  (= (occurences (opponent me) triple) 0))
 		triples)))
 ;; gameplay
+;; the user input implemented as a callback strategy is pretty neat!
 
 (define (stupid-ttt position letter)
   (location '_ position))
+
+(define (ask-user position letter)
+  (print-position position)
+  (display letter)
+  (display "`s move: ")
+  (read))
+
+(define (print-position position)
+  (show position))
 
 (define (location letter word)
   (if (equal? letter (first word))
@@ -150,3 +161,4 @@
       (word letter (bf position))
       (word (first position)
 	    (add-move (- square 1) letter (bf position)))))
+
