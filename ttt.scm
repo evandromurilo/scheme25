@@ -134,7 +134,30 @@
   (read))
 
 (define (print-position position)
-  (show position))
+  (print-row (subword position 1 3))
+  (show "-+-+-")
+  (print-row (subword position 4 6))
+  (show "-+-+-")
+  (print-row (subword position 7 9))
+  (newline))
+
+(define (print-row row)
+  (maybe-display (first row))
+  (display "|")
+  (maybe-display (first (bf row)))
+  (display "|")
+  (maybe-display (last row))
+  (newline))
+
+(define (maybe-display letter)
+  (if (not (equal? letter '_))
+      (display letter)
+      (display " ")))
+
+(define (subword wd start end)
+  (cond ((> start 1) (subword (bf wd) (- start 1) (- end 1)))
+	((< end (count wd)) (subword (bl wd) start end))
+	(else wd)))
 
 (define (location letter word)
   (if (equal? letter (first word))
