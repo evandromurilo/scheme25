@@ -127,11 +127,19 @@
 (define (stupid-ttt position letter)
   (location '_ position))
 
+(define (available? position square)
+  (if (equal? square 1)
+      (equal? (first position) '_)
+      (available? (bf position) (- square 1))))
+
 (define (ask-user position letter)
   (print-position position)
   (display letter)
   (display "`s move: ")
-  (read))
+  (let ((square (read)))
+    (if (not (available? position square))
+	(begin (show "not available, try again") (ask-user position letter))
+	square)))
 
 (define (print-position position)
   (print-row (subword position 1 3))
