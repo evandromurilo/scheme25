@@ -41,3 +41,25 @@
 
 (define (lastfirst name)
   (se (last name) (bl name)))
+
+(define (concatenate innames outname)
+  (let ((outport (open-output-file outname)))
+    (concatenate-helper innames outport)
+    (close-output-port outport)))
+
+(define (concatenate-helper innames outport)
+  (if (null? innames)
+      'done
+      (let ((inport (open-input-file (car innames))))
+	(copy-file inport outport)
+	(close-input-port inport)
+	(concatenate-helper (cdr innames) outport))))
+
+(define (copy-file inport outport)
+  (let ((term (read inport)))
+    (if (eof-object? term)
+	'done
+	(begin
+	  (display term outport)
+	  (copy-file inport outport)))))
+    
