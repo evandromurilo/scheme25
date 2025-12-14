@@ -63,3 +63,25 @@
 	  (display term outport)
 	  (copy-file inport outport)))))
     
+(define (count-lines inname)
+  (let ((inport (open-input-file inname)))
+    (let ((tot (count-lines-helper inport)))
+      (close-input-port inport)
+      tot)))
+
+(define (count-lines-helper port)
+  (if (eof-object? (read-line port))
+      0
+      (+ 1 (count-lines-helper port))))
+
+(define (wordcount inname)
+  (let ((inport (open-input-file inname)))
+    (let ((tot (wordcount-helper inport)))
+      (close-input-port inport)
+      tot)))
+
+(define (wordcount-helper inport)
+  (let ((line (read-line inport)))
+    (if (eof-object? line)
+	0
+	(+ (count line) (wordcount-helper inport)))))
