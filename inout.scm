@@ -85,3 +85,19 @@
     (if (eof-object? line)
 	0
 	(+ (count line) (wordcount-helper inport)))))
+
+(define (dedup inname outname)
+  (let ((inport (open-input-file inname))
+	(outport (open-output-file outname)))
+    (dedup-helper inport outport 'no-line)
+    (close-input-port inport)
+    (close-output-port outport)))
+
+(define (dedup-helper inport outport prev)
+  (let ((line (read-line inport)))
+    (if (eof-object? line)
+	'done
+	(begin
+	  (if (not (equal? line prev))
+	      (show-line line outport))
+	  (dedup-helper inport outport line)))))
