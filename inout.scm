@@ -166,14 +166,16 @@
 (define (skip-until inport i target)
   (let ((lst (read inport)))
     (if (eof-object? lst)
-	#f
+	lst
 	(let ((key (at lst i)))
 	  (if (or (equal? key target) (before? target key))
 	      lst
 	      (skip-until inport i target))))))
 
+;; this one is quite nice: it recurses inverting aport and bport when any of the ports gets ahead
+;; of the other (missing keys)
 (define (join-helper aport bport ai bi outport a-row invert)
-  (if (or (eof-object? a-row) (equal? #f a-row))
+  (if (eof-object? a-row)
       'done
       (let* ((key (at a-row ai))
 	     (b-row (skip-until bport bi key)))
