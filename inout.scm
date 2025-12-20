@@ -172,6 +172,11 @@
 	      lst
 	      (skip-until inport i target))))))
 
+(define (remove lst i)
+  (if (equal? i 1)
+      (cdr lst)
+      (cons (car lst) (remove lst (- i 1)))))
+
 ;; this one is quite nice: it recurses inverting aport and bport when any of the ports gets ahead
 ;; of the other (missing keys)
 (define (join-helper aport bport ai bi outport a-row invert)
@@ -182,7 +187,7 @@
 	(if (equal? key (at b-row bi))
 	    (begin
 	      (if invert
-		  (show (append b-row a-row) outport)
-		  (show (append a-row b-row) outport))
+		  (show (append b-row (remove a-row ai)) outport)
+		  (show (append a-row (remove b-row bi)) outport))
 	      (join-helper aport bport ai bi outport (read aport) invert))
 	    (join-helper bport aport bi ai outport b-row (not invert))))))
