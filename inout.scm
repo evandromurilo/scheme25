@@ -113,7 +113,7 @@
       #f
       (if (equal? (car line) word)
 	  #t
-	  (in-line (cdr line) word))))
+	  (in-line? (cdr line) word))))
 
 (define (lookup-helper inport word)
   (let ((line (read-line inport)))
@@ -146,3 +146,37 @@
 	    (begin
 	      (show-line line)
 	      (page-helper inport (- cnt 1) line))))))
+
+;; join database a with b on columns ai bi
+(define (join aname bname ai bi outname)
+  (let ((aport (open-input-file aname))
+	(bport (open-input-file bname))
+	(outport (open-output-file outname)))
+    (join-helper aport bport ai bi outport)
+    (close-input-port aport)
+    (close-input-port bport)
+    (close-output-port outport)
+    'done))
+
+(define (at lst cnt)
+  (if (equal? cnt 1)
+      (car lst)
+      (at (cdr lst) (- cnt 1))))
+
+(define (find-by-col inport i target)
+  (let ((lst (read inport)))
+    (if (eof-object? lst)
+	#f
+	(if (equal? (at lst i) target)
+	    lst
+	    (find-by-col inport i target)))))
+
+(define (join-helper aport bport ai bi outport)
+  (let ((a-row (read aport)))
+    (if (eof-object? a-row)
+	'done
+	(let ((b-row (find-by-col bport bi (at a-row ai))))
+	  (when b-row
+	    (display (append a-row b-row) outport))
+	  (join-helper aport bport ai bi outport)))))
+	      
