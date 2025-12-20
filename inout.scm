@@ -125,3 +125,24 @@
 	  (lookup-helper inport word)))))
 	    
   
+(define (with-inport inname fn)
+  (let ((inport (open-input-file inname)))
+    (let ((res (fn inport)))
+      (close-input-port inport)
+      res)))
+
+(define (page inname)
+  (with-inport inname (lambda (inport) (page-helper inport 24 ""))))
+
+(define (page-helper inport cnt last)
+  (if (equal? cnt 0)
+      (begin
+	(read)
+	(show-line last)
+	(page-helper inport 24 last))
+      (let ((line (read-line inport)))
+	(if (eof-object? line)
+	    'done
+	    (begin
+	      (show-line line)
+	      (page-helper inport (- cnt 1) line))))))
