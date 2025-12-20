@@ -101,3 +101,27 @@
 	  (if (not (equal? line prev))
 	      (show-line line outport))
 	  (dedup-helper inport outport line)))))
+
+(define (lookup inname word)
+  (let ((inport (open-input-file inname)))
+    (lookup-helper inport word)
+    (close-input-port inport)
+    'done))
+
+(define (in-line? line word)
+  (if (empty? line)
+      #f
+      (if (equal? (car line) word)
+	  #t
+	  (in-line (cdr line) word))))
+
+(define (lookup-helper inport word)
+  (let ((line (read-line inport)))
+    (if (eof-object? line)
+	'done
+	(begin
+	  (when (in-line? line word)
+	    (show-line line))
+	  (lookup-helper inport word)))))
+	    
+  
