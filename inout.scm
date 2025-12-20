@@ -152,7 +152,7 @@
   (let ((aport (open-input-file aname))
 	(bport (open-input-file bname))
 	(outport (open-output-file outname)))
-    (join-helper aport bport ai bi outport)
+    (join-helper aport bport ai bi outport (read aport) #f)
     (close-input-port aport)
     (close-input-port bport)
     (close-output-port outport)
@@ -163,20 +163,24 @@
       (car lst)
       (at (cdr lst) (- cnt 1))))
 
-(define (find-by-col inport i target)
+(define (skip-until inport i target)
   (let ((lst (read inport)))
     (if (eof-object? lst)
 	#f
-	(if (equal? (at lst i) target)
-	    lst
-	    (find-by-col inport i target)))))
+	(let ((key (at lst i)))
+	  (if (or (equal? key target) (before? target key))
+	      lst
+	      (skip-until inport i target))))))
 
-(define (join-helper aport bport ai bi outport)
-  (let ((a-row (read aport)))
-    (if (eof-object? a-row)
-	'done
-	(let ((b-row (find-by-col bport bi (at a-row ai))))
-	  (when b-row
-	    (display (append a-row b-row) outport))
-	  (join-helper aport bport ai bi outport)))))
-	      
+(define (join-helper aport bport ai bi outport a-row invert)
+  (if (or (eof-object? a-row) (equal? #f a-row))
+      'done
+      (let* ((key (at a-row ai))
+	     (b-row (skip-until bport bi key)))
+	(if (equal? key (at b-row bi))
+	    (begin
+	      (if invert
+		  (show (append b-row a-row) outport)
+		  (show (append a-row b-row) outport))
+	      (join-helper aport bport ai bi outport (read aport) invert))
+	    (join-helper bport aport bi ai outport b-row (not invert))))))
