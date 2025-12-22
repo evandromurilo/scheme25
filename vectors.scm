@@ -40,3 +40,16 @@
       (list)
       (cons (vector-ref vec index)
 	    (vector->list-helper vec (+ index 1)))))
+
+(define (vector-map fun vec)
+  (vector-map-helper (make-vector (vector-length vec)) fun vec (- (vector-length vec) 1)))
+
+(define (vector-map-helper new fun vec index)
+  (if (< index 0)
+      new
+      (begin
+	(vector-set! new index (fun (vector-ref vec index)))
+	(vector-map-helper new fun vec (- index 1)))))
+
+(define (vector-map! fun vec)
+  (vector-map-helper vec fun vec (- (vector-length vec) 1)))
