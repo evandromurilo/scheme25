@@ -32,3 +32,11 @@
 	(vector-set! vec (+ from-index index) (vector-ref old-vec index))
 	(vector-copy-helper vec old-vec from-index (- index 1)))))
 			
+(define (vector->list vec)
+  (vector->list-helper vec 0))
+
+(define (vector->list-helper vec index)
+  (if (equal? index (vector-length vec))
+      (list)
+      (cons (vector-ref vec index)
+	    (vector->list-helper vec (+ index 1)))))
