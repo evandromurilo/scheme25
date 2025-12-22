@@ -23,14 +23,14 @@
     new))
 
 (define (vector-copy! vec old-vec from-index)
-  (vector-copy-helper vec old-vec from-index (- (vector-length old-vec) 1)))
+  (vector-copy-helper vec old-vec from-index 0 (vector-length old-vec)))
 
-(define (vector-copy-helper vec old-vec from-index index)
-  (if (< index 0)
+(define (vector-copy-helper vec old-vec from-index index total)
+  (if (or (equal? total 0))
       'done
       (begin
 	(vector-set! vec (+ from-index index) (vector-ref old-vec index))
-	(vector-copy-helper vec old-vec from-index (- index 1)))))
+	(vector-copy-helper vec old-vec from-index (+ index 1) (- total 1)))))
 			
 (define (vector->list vec)
   (vector->list-helper vec 0))
@@ -53,3 +53,19 @@
 
 (define (vector-map! fun vec)
   (vector-map-helper vec fun vec (- (vector-length vec) 1)))
+
+(define (vector-filter fun vec)
+  (let* ((new (make-vector (vector-length vec)))
+	 (size (vector-filter-helper new fun vec (- (vector-length vec) 1) 0))
+	 (newest (make-vector size)))
+    (vector-copy-helper newest new 0 0 size)
+    newest))
+
+(define (vector-filter-helper new fun vec index total)
+  (if (< index 0)
+      total
+      (if (fun (vector-ref vec index))
+	  (begin
+	    (vector-set! new total (vector-ref vec index))
+	    (vector-filter-helper new fun vec (- index 1) (+ total 1)))
+	  (vector-filter-helper new fun vec (- index 1) total))))
