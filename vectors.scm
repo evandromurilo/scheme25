@@ -161,9 +161,11 @@
 (define (flatten lst)
   (if (null? lst)
       lst
-      (if (list? (car lst))
-	  (append (flatten (car lst)) (flatten (cdr lst)))
-	  (cons (car lst) (flatten (cdr lst))))))
+      (if (and (vector? (car lst)) (empty? (car lst)))
+	  (flatten (cdr lst))
+	  (if (list? (car lst))
+	      (append (flatten (car lst)) (flatten (cdr lst)))
+	      (cons (car lst) (flatten (cdr lst)))))))
 
 (define sentence (lambda args (apply vector (flatten args))))
 
