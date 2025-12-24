@@ -118,3 +118,24 @@
   (let ((temp (vector-ref vec a)))
     (vector-set! vec a (vector-ref vec b))
     (vector-set! vec b temp)))
+
+(define (do-times fun n)
+  (do-times-helper fun n 0))
+
+(define (do-times-helper fun max cur)
+  (if (equal? cur max)
+      'done
+      (begin
+	(fun cur)
+	(do-times-helper fun max (+ cur 1)))))
+
+(define (make-matrix x y)
+  (let ((vec (make-vector x)))
+    (do-times (lambda (n) (vector-set! vec n (make-vector y))) x)
+    vec))
+
+(define (matrix-ref matrix x y)
+  (vector-ref (vector-ref matrix x) y))
+
+(define (matrix-set! matrix x y val)
+  (vector-set! (vector-ref matrix x) y val))
