@@ -93,3 +93,28 @@
     price))
     
   
+(define (vector-sort! vec)
+  (vector-sort-helper vec 0))
+
+(define (vector-sort-helper vec index)
+  (if (equal? index (vector-length vec))
+      vec
+      (let ((min-index (vector-min-index vec index)))
+	(unless (equal? min-index index)
+	  (vector-swap! vec index min-index))
+	(vector-sort-helper vec (+ index 1)))))
+
+(define (vector-min-index vec index)
+  (vector-min-index-helper vec (+ index 1) index))
+
+(define (vector-min-index-helper vec index min)
+  (if (equal? (vector-length vec) index)
+      min
+      (if (< (vector-ref vec index) (vector-ref vec min))
+	  (vector-min-index-helper vec (+ index 1) index)
+	  (vector-min-index-helper vec (+ index 1) min))))
+
+(define (vector-swap! vec a b)
+  (let ((temp (vector-ref vec a)))
+    (vector-set! vec a (vector-ref vec b))
+    (vector-set! vec b temp)))
