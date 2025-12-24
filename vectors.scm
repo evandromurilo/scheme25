@@ -23,14 +23,14 @@
     new))
 
 (define (vector-copy! vec old-vec from-index)
-  (vector-copy-helper vec old-vec from-index 0 (vector-length old-vec)))
+  (vector-copy-helper vec old-vec from-index 0 (- (vector-length old-vec) from-index)))
 
 (define (vector-copy-helper vec old-vec from-index index total)
-  (if (or (equal? total 0))
-      'done
+  (if (equal? total 0)
+      vec
       (begin
-	(vector-set! vec (+ from-index index) (vector-ref old-vec index))
-	(vector-copy-helper vec old-vec from-index (+ index 1) (- total 1)))))
+	(vector-set! vec index (vector-ref old-vec from-index))
+	(vector-copy-helper vec old-vec (+ from-index 1) (+ index 1) (- total 1)))))
 			
 (define (vector->list vec)
   (vector->list-helper vec 0))
@@ -157,3 +157,21 @@
   (if (null? (cdr location))
       (vector-ref ar (car location))
       (array-ref (vector-ref ar (car location)) (cdr location))))
+
+(define sentence (lambda args (apply vector args)))
+
+(define (butfirst sent)
+  (vector-copy! (make-vector (- (vector-length sent) 1)) sent 1))
+
+(define (empty? sent)
+  (equal? 0 (vector-length sent)))
+
+(define (first sent)
+  (vector-ref sent 0))
+
+(define (last sent)
+  (vector-ref sent (- (vector-length sent) 1)))
+
+(define (butlast sent)
+  (vector-copy-helper (make-vector (- (vector-length sent) 1)) sent 0 0 (- (vector-length sent) 1)))
+    
