@@ -139,3 +139,21 @@
 
 (define (matrix-set! matrix x y val)
   (vector-set! (vector-ref matrix x) y val))
+
+(define (make-array dimensions)
+  (if (null? (cdr dimensions))
+      (make-vector (car dimensions))
+      (begin
+	(let ((vec (make-vector (car dimensions))))
+	  (do-times (lambda (n) (vector-set! vec n (make-array (cdr dimensions)))) (car dimensions))
+	  vec))))
+
+(define (array-set! ar location val)
+  (if (null? (cdr location))
+      (vector-set! ar (car location) val)
+      (array-set! (vector-ref ar (car location)) (cdr location) val)))
+
+(define (array-ref ar location)
+  (if (null? (cdr location))
+      (vector-ref ar (car location))
+      (array-ref (vector-ref ar (car location)) (cdr location))))
