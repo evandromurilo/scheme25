@@ -69,3 +69,27 @@
 	    (vector-set! new total (vector-ref vec index))
 	    (vector-filter-helper new fun vec (- index 1) (+ total 1)))
 	  (vector-filter-helper new fun vec (- index 1) total))))
+
+(define *tables* (make-vector 28 0))
+
+(define *menu* '((potstickers 3.24) (wor-won-ton 4.56) (egg-rolls 2.25) (shin-shin-special-prawns 5.35)))
+
+(define (assoc-ref assoc key)
+  (if (empty? assoc)
+      #f
+      (if (equal? (caar assoc) key)
+	  (car assoc)
+	  (assoc-ref (cdr assoc) key))))
+
+(define (item-price item)
+  (cadr (assoc-ref *menu* item)))
+
+(define (order number item)
+  (vector-set! *tables* number (+ (item-price item) (vector-ref *tables* number))))
+
+(define (bill number)
+  (let ((price (vector-ref *tables* number)))
+    (vector-set! *tables* number 0)
+    price))
+    
+  
