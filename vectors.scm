@@ -158,7 +158,14 @@
       (vector-ref ar (car location))
       (array-ref (vector-ref ar (car location)) (cdr location))))
 
-(define sentence (lambda args (apply vector args)))
+(define (flatten lst)
+  (if (null? lst)
+      lst
+      (if (list? (car lst))
+	  (append (flatten (car lst)) (flatten (cdr lst)))
+	  (cons (car lst) (flatten (cdr lst))))))
+
+(define sentence (lambda args (apply vector (flatten args))))
 
 (define (butfirst sent)
   (vector-copy! (make-vector (- (vector-length sent) 1)) sent 1))
